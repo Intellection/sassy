@@ -1,14 +1,18 @@
 require 'spec_helper'
 
-describe "testing xml output" do
+describe Sassy::SSSBuilder do
   context "given an array of questions" do
 
     # need to ensure that either after each test or failure/finish the files get deleted
     
     before(:each) do
+      
     end
 
     context "a single variable" do
+      before(:each) do
+        foo = Sassy::SSSBuilder.new(TEST_QUESTIONS)  
+      end
       it "the variable should have a return type of single and ident attribute of 1" do
       end
 
