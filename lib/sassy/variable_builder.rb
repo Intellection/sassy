@@ -1,6 +1,6 @@
 module Sassy
   class VariableBuilder
-    # should probably subclass all of this out
+    # should probably subclass this out, maybe some meta-programming to DRY it up
     class << self
       def single(xml_builder, variable)
         xml_builder.variable(:ident => 5, :type => "single") do |v| 

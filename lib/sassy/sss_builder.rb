@@ -64,16 +64,16 @@ module Sassy
       xml_builder
     end
 
-    def self.foo(xml_builder, variables)
-      xml_builder.record(ident: 5) do |r|
-        variables.each do |variable|
-          Sassy::VariableBuilder.single(r, variable)
-          Sassy::VariableBuilder.character(r, variable)
-          Sassy::VariableBuilder.quantity(r, variable)
-        end
-      end
+    # def self.foo(xml_builder, variables)
+    #   xml_builder.record(ident: 5) do |r|
+    #     variables.each do |variable|
+    #       Sassy::VariableBuilder.single(r, variable)
+    #       Sassy::VariableBuilder.character(r, variable)
+    #       Sassy::VariableBuilder.quantity(r, variable)
+    #     end
+    #   end
 
-      xml_builder
-    end
+    #   xml_builder
+    # end
   end
 end

@@ -1,3 +1,4 @@
+require "builder"
 require "sassy/version"
 require "sassy/sss_builder"
 require "sassy/variable_builder"
