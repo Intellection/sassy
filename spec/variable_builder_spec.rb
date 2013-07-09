@@ -5,6 +5,8 @@ describe Sassy::VariableBuilder do
 
     # need to ensure that either after each test or failure/finish the files get deleted
 
+    # must test that all variable ids are unique
+
     context "a single variable" do
       before(:each) do
         single_variable = {

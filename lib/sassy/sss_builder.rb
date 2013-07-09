@@ -15,26 +15,25 @@ module Sassy
     end
 
     def write!
-      # not sure if I like exception handling for control flow
-      begin
-        create_definition_file(variables)
-        #create_data_file(answers)
-      rescue
-        # some useful kind of exception here
-      end
+      create_definition_file
+      create_data_file
+    end
+
+    def create_data_file
+      Sassy::AnswerBuilder.create_data_file(@answers)
     end
 
     def create_definition_file
       xml = build_sss_template
-      File.open("definition_file.xml", "w+") { |file| file.write(xml) } # What should this method return? Leaving w+ for now
+      File.open("definition_file.xml", "w") { |file| file.write(xml) }
     end
 
     def build_sss_template
       $KCODE = 'UTF8'
-      xml_builder = Builder::XmlMarkup.new(indent: 2)
+      xml_builder = Builder::XmlMarkup.new(indent: 2) # need to ensure that instance variable gets removed
       xml_builder.instruct!(:xml, :version=> "1.0", :encoding => "UTF-8")
 
-      xml_builder.sss(version: 1.2) do |x| # build_sss
+      xml_builder.sss(version: 1.2) do |x|
         x.date(Date.today.strftime("%d %b, %Y"))
         x.time(Time.now.strftime("%H:%M"))
         build_survey(x)
@@ -55,25 +54,21 @@ module Sassy
     def build_record(xml_builder)
       xml_builder.record(ident: @record_id) do |r|
         @variables.each do |variable|
-          Sassy::VariableBuilder.single(r, variable)
-          Sassy::VariableBuilder.character(r, variable)
-          Sassy::VariableBuilder.quantity(r, variable)
+          # REFACTOR! :(
+          case variable.type
+          when "quantity"
+            Sassy::VariableBuilder.quantity(r, variable)
+          when "single"
+            Sassy::VariableBuilder.single(r, variable)
+          when "character" 
+            Sassy::VariableBuilder.character(r, variable)
+          else
+            raise "Unsupported type found. Please ensure that all variable types are one of the following: quantity, single, or character"
+          end
         end
       end
 
       xml_builder
     end
-
-    # def self.foo(xml_builder, variables)
-    #   xml_builder.record(ident: 5) do |r|
-    #     variables.each do |variable|
-    #       Sassy::VariableBuilder.single(r, variable)
-    #       Sassy::VariableBuilder.character(r, variable)
-    #       Sassy::VariableBuilder.quantity(r, variable)
-    #     end
-    #   end
-
-    #   xml_builder
-    # end
   end
 end

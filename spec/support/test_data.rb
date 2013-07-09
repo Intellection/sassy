@@ -22,17 +22,19 @@ TEST_VARIABLES = [
   {
     :name=>"Q24", 
     :type=>"single", 
-    :label=>"Employment status", 
+    :label=>"Favourite tourist attraction", 
     :values=>
     {
-      "1"=>"Work for someone else full-time (30+ hours)", 
-      "2"=>"Temporarily unemployed", 
-      "3"=>"Self-employed", 
-      "4"=>"Work for someone else part-time only (8-29 hours)", 
-      "5"=>"Retired, not employed", 
-      "6"=>"Student, disabled, etc. not employed", 
-      "7"=>"Full time homemaker", 
-      "8"=>"None"
+      "1"=>"The Waterfront", 
+      "2"=>"Table Mountain", 
+      "3"=>"Cape Point", 
+      "4"=>"Whale spotting", 
+      "5"=>"The Garden Route", 
+      "6"=>"Township Tour", 
+      "7"=>"Shark cage diving", 
+      "8"=>"Wine tasting"
+      "9"=>"Watch Bokke smash All Blacks"
+      "10"=>"Robben Island"
     }
   },  
   {
@@ -45,7 +47,20 @@ TEST_VARIABLES = [
     }
   }]
 
-TEST_ANSWERS = [{}]
+TEST_ANSWERS = [
+  ["m09876543211", 2, 3, 11],
+  ["27720628423", 1, 10, 3],
+  ["27712345678", 1, 6, -2]
+]
+
+# OR
+
+TEST_ANSWERS_BY_COLUMN = [
+  ["m09876543211", "27720628423", "27712345678"],
+  [2, 1, 1],
+  [3, 10, 6],
+  [11, 3, -2]
+]
 
 # Skeleton Code
 
