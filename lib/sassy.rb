@@ -23,8 +23,8 @@ module Sassy
   #
   # answers = [[col1],[col2], ..., [coln]]
 
-  def self.write_to_file(variables, answers)
-    Sassy::SSSBuilder.new(variables, answers).write!
+  def self.write!(options)
+    Sassy::SSSBuilder.new(options).write!
   end
 
 end

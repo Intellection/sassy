@@ -2,13 +2,11 @@ module Sassy
   class AnswerBuilder
 
     def initialize(answers)
+      # need to do some validation on these answers
       @answers = answers
     end
 
     def create_data_file!(file_name = "data_file.dat")
-      # need to do some error checking here
-      # what kind of errors?
-
       File.open(file_name, "w") do |file|
         padded_answers.transpose.each do |row|
           file.puts(row.inject(&:<<))
@@ -17,24 +15,17 @@ module Sassy
     end
 
     def self.answer_positions(answers)
-      # method to calculate array/hash of answer widths
-      # format:
-      # [12, 1, 1, 1, 4, 1]
-      # OR
-      # [{start: 0, length: 12}, {start: 12, length: 1}, {start: 13, length: 1}, {start: 14, length: 1}, {start: 15, length: 4}, {start: 19, length: 1}]
-
-      # answers.map do |column|
-      #   column.map(&:strip).max_by{ |e| e.to_s.length }.to_s.length
-      # end
-
-      # OR
-
-      # answers.map do |column|
-      #   {
-      #     start: 0,
-      #     length: column.map(&:strip).max_by{ |e| e.to_s.length }.to_s.length
-      #   }
-      # end
+      # REFACTOR
+      positions = []
+      position_counter = 1
+      answers.transpose.each do |column|
+        max_length = column.max_by{ |e| e.to_s.strip.length }.to_s.length
+        new_position = position_counter + max_length
+        end_position = max_length == 1 ? position_counter : position_counter + max_length - 1
+        positions << { start: position_counter, length: max_length, finish: end_position }
+        position_counter = new_position
+      end
+      positions
     end
 
     private
@@ -43,6 +34,7 @@ module Sassy
       @answers.map do |column|
         length = column.max_by{ |e| e.to_s.strip.length }.to_s.length
         column.map do |answer|
+          # if character, need to ljust
           answer.to_s.rjust(length)
         end
       end

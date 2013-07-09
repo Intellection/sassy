@@ -1,5 +1,6 @@
 TEST_VARIABLES = [
   {
+    :id=>0,
     :name=>"Respondent_ID", 
     :type=>"character", 
     :label=>"ID", 
@@ -9,6 +10,7 @@ TEST_VARIABLES = [
     }
   },  
   {
+    :id=>1,
     :name=>"AGE_GROUP", 
     :type=>"single", 
     :label=>"Age group", 
@@ -20,6 +22,7 @@ TEST_VARIABLES = [
     }
   }, 
   {
+    :id=>2,
     :name=>"Q24", 
     :type=>"single", 
     :label=>"Favourite tourist attraction", 
@@ -38,6 +41,7 @@ TEST_VARIABLES = [
     }
   },  
   {
+    :id=>3,
     :name=>"Q32", 
     :type=>"quantity", 
     :label=>"Years as loyal customer", 
