@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sassy::SSSBuilder do
 
-  context "When given an array of questions" do
+  context "Exporting an array of variables and answers" do
     before(:each) do
       questions = [{
           :id=>0,
@@ -52,7 +52,11 @@ describe Sassy::SSSBuilder do
           :label=>"Years as loyal customer", 
           :values=>
           {
-            "range"=>"-9..99"
+            "range"=>
+            { 
+              from: -9,
+              to: 99
+            }
           }
         }]
 
@@ -81,7 +85,7 @@ describe Sassy::SSSBuilder do
     end
 
     it "should contain a version attribute" do
-       doc.xpath("//sss/@version")[0].value.should == "1.2"
+       @doc.xpath("//sss/@version")[0].value.should == "1.2"
     end
 
     it "should contain an opening survey element" do
@@ -103,10 +107,12 @@ describe Sassy::SSSBuilder do
       end
 
       it "there should be an ident attribute" do
-        @doc.xpath("//variable/@ident")[0].value.should_not be_empty
+        @doc.xpath("//variable/@ident")[1].value.should == "1"
       end
 
       it "all ident attributes are unique" do
+        idents = @doc.xpath("//variable/@ident").map { |i| i.value }
+        idents.uniq.length.should == 4
       end
 
       it "should contain a name element" do
@@ -123,59 +129,74 @@ describe Sassy::SSSBuilder do
 
       context "when the variable is type single" do
         it "should contain a values element" do
+          @doc.xpath("//variable[@ident=1]//values").should_not be_empty
         end
 
         it "the start and finish attributes of the position element must be correct" do
+          @doc.xpath("//variable")[1].at_xpath("position").attributes["start"].value.should == "13"
+          @doc.xpath("//variable")[1].at_xpath("position").attributes["finish"].value.should == "13"
         end
 
         it "the number of decimal values in a value attribute must match the data in data file" do
+          pending "TODO"
         end
 
         context "and the element is a values element" do
           it "should have a nested value element" do
+            @doc.xpath("//variable[@ident=1]//values/value").should_not be_empty
           end
 
           it "the value element should have a code attribute" do
+            @doc.xpath("//variable")[1].at_xpath("values").at_xpath("value").attributes["code"].value.should == "1"
           end
 
-          it "the value element should have some content"
-
-          it "the value of the code attribute must be unique and positive" do
+          it "the value element should have some content" do
+            @doc.xpath("//variable")[1].at_xpath("values").at_xpath("value").children.text.should == "18-29"
           end
 
-          it "all the code values are legal" do
-            # no + sign, no spaces, numeric digits must be present
+          it "the value of the code attribute must be legal" do
+            code_ids = @doc.xpath("/sss/survey/record/variable[@ident=1]//value").map {|n| n["code"] }
+            code_ids.uniq.length.should == 3
+            code_ids.map{|e| e.scan(/^[-]?[0-9]*$/)}.flatten.length.should == 3
           end
         end
       end
 
       context "when the variable is type quantity" do
         it "should contain a range element" do
+          @doc.xpath("/sss/survey/record/variable[@ident=3]//range").should_not be_empty
+        end
+
+        it "the range element should have a from and to attribute" do
+          @doc.xpath("/sss/survey/record/variable[@ident=3]//range/@from").should_not be_empty
+        end
+
+        it "the values of the from and to attributes are legal" do
+          # no + sign, no spaces, numeric digits must be present
+          @doc.xpath("/sss/survey/record/variable[@ident=3]//range/@from")[0].value.scan(/^[-]?[0-9]*$/)[0].should == "-9"
+          @doc.xpath("/sss/survey/record/variable[@ident=3]//range/@to")[0].value.scan(/^[-]?[0-9]*$/)[0].should == "99"
         end
 
         it "the start and finish attributes of the position element must be correct" do
           # values are correct
           # finish must be >= start
-        end
-
-        it "the range element should have a from and to attribute" do
-        end
-
-        it "the values of the from and to attributes are legal" do
-          # no + sign, no spaces, numeric digits must be present
           # width of 'to' must match position_start - position_end
+          pending "TODO"
         end
       end
 
       context "when the variable is type character" do
         it "should contain a size element element" do
+          @doc.xpath("/sss/survey/record/variable[@ident=0]//size").should_not be_empty
         end
 
         it "the start and finish attributes of the position element must be correct" do
+          pending "TODO"
         end
 
         it "the content of the size element is legal" do
           # no + sign, no spaces, numeric digits must be present
+          @doc.xpath("/sss/survey/record/variable[@ident=0]//size")[0].inner_text.scan(/^[-]?[0-9]*$/)[0].should == "30"
         end
       end
     end

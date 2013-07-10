@@ -5,7 +5,7 @@ describe Sassy::AnswerBuilder do
   context "given an array of arrays of answers" do
 
     # columns
-    let(:answers_array) {[["m09876543211", "27720628423", "27712345678"],[2, 1, 1],[3, 10, 6],[11, 3, -2]]}
+    let(:answers_array) {[["m09876543211", "27720628423", "27712345678"],["", 1, 1],[3, 10, 6],[11, 3, -2]]}
 
     before(:each) do
       Sassy::AnswerBuilder.new(answers_array).create_data_file!("test.dat")
@@ -35,7 +35,7 @@ describe Sassy::AnswerBuilder do
       end
 
       it "should display missing values as spaces" do
-        pending
+        @file.readline[12].should == " "
       end
     end
 
@@ -54,7 +54,6 @@ describe Sassy::AnswerBuilder do
 
     context "the character variable answers" do
       it "should be left justified and padded" do
-        pending
         @file.readline
         @file.readline.chars.first(12).inject(&:<<).should == "27720628423 "
       end
