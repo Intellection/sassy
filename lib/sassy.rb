@@ -23,7 +23,7 @@ module Sassy
   #
   # answers = [[col1],[col2], ..., [coln]]
 
-  def self.write!(options)
+  def self.export!(options)
     Sassy::SSSBuilder.new(options).write!
   end
 

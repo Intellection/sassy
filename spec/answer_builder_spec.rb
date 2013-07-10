@@ -33,6 +33,10 @@ describe Sassy::AnswerBuilder do
       it "should be right justified and padded" do
         @file.readline[13..14].should == " 3"
       end
+
+      it "should display missing values as spaces" do
+        pending
+      end
     end
 
     context "the quantity variable answers" do

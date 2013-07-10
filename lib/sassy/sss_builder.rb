@@ -29,7 +29,6 @@ module Sassy
     end
 
     def build_sss_template
-      $KCODE = 'UTF8'
       xml_builder = Builder::XmlMarkup.new(indent: 2) # need to ensure that instance variable gets removed
       xml_builder.instruct!(:xml, :version=> "1.0", :encoding => "UTF-8")
 
