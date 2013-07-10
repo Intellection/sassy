@@ -5,11 +5,12 @@ module Sassy
 
     def initialize(options={})
       @survey_name = options.fetch(:survey_name, "Survey")
-      @record_id = options.fetch(:record_id, "12345")
+      @record_id = options.fetch(:record_id, "12345") # not sure what this should be
+      @definition_file_name = options.fetch(:definition_file_name, "definition_file.xml")
+      @data_file_name = options.fetch(:data_file_name, "data_file.dat")
       @variables = options[:variables]
       @answers = options[:answers]
 
-      raise ArgumentError, "Required option missing: record_id" if @record_id.nil?
       raise ArgumentError, "Required option missing: variables" if @variables.nil?
       raise ArgumentError, "Required option missing: answers" if @answers.nil?
     end
@@ -20,58 +21,12 @@ module Sassy
     end
 
     def create_data_file
-      Sassy::AnswerBuilder.new(@answers).create_data_file!
+      Sassy::AnswerBuilder.new(@answers).create_data_file! @data_file_name
     end
 
     def create_definition_file
-      xml = build_sss_template
-      File.open("definition_file.xml", "w") { |file| file.write(xml) }
-    end
-
-    def build_sss_template
-      xml_builder = Builder::XmlMarkup.new(indent: 2) # need to ensure that instance variable gets removed
-      xml_builder.instruct!(:xml, :version=> "1.0", :encoding => "UTF-8")
-
-      xml_builder.sss(version: 1.2) do |x|
-        x.date(Date.today.strftime("%d %b, %Y"))
-        x.time(Time.now.strftime("%H:%M"))
-        build_survey(x)
-      end
-
-      xml_builder
-    end
-
-    def build_survey(xml_builder)
-      xml_builder.survey do |s|
-        s.name(@survey_name)
-        build_record(s)
-      end
-
-      xml_builder
-    end
-
-    def build_record(xml_builder)
-      xml_builder.record(ident: @record_id) do |r|
-        @variables.each do |variable|
-          # REFACTOR
-          case variable[:type]
-          when "quantity"
-            Sassy::VariableBuilder.quantity(r, variable, answer_positions)
-          when "single"
-            Sassy::VariableBuilder.single(r, variable, answer_positions)
-          when "character" 
-            Sassy::VariableBuilder.character(r, variable, answer_positions)
-          else
-            raise "Unsupported type found. Please ensure that all variable types are one of the following: quantity, single, or character"
-          end
-        end
-      end
-
-      xml_builder
-    end
-
-    def answer_positions
-      Sassy::AnswerBuilder.answer_positions(@answers)
+      xml = Sassy::DefinitionBuilder.new(@variables, @survey_name, @record_id, @answers).build_sss_template
+      File.open(@definition_file_name, "w") { |file| file.write(xml) }
     end
   end
 end

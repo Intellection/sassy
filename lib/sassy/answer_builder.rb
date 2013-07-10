@@ -32,7 +32,7 @@ module Sassy
 
     def padded_answers
       @answers.map do |column|
-        length = column.max_by{ |e| e.to_s.strip.length }.to_s.length
+        length = column.map { |c| c.to_s.strip.length }.max
         column.map do |answer|
           # if character, need to ljust
           answer.to_s.rjust(length)

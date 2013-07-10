@@ -1,6 +1,5 @@
 module Sassy
   class VariableBuilder
-    # REFACTOR (inheritance or composition).
     class << self
       def single(xml_builder, variable, answer_positions)
         position_start, position_end = calculate_position(answer_positions, variable[:id])
@@ -20,7 +19,7 @@ module Sassy
           v.name(variable[:name])
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
-          v.range(from: variable[:values]["range"], to: variable[:values]["range"])
+          v.range(from: variable[:values]["range"][:from], to: variable[:values]["range"][:to])
         end
 
         xml_builder
@@ -52,8 +51,7 @@ module Sassy
       end
 
       def calculate_position(answer_positions, variable_id)
-        hsh = answer_positions[variable_id]
-        [hsh[:start], hsh[:finish]]
+        answer_positions[variable_id].values_at(:start, :finish)
       end
     end
   end
