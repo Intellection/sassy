@@ -8,7 +8,7 @@ describe Sassy::AnswerBuilder do
     let(:answers_array) {[["m09876543211", "27720628423", "27712345678"],["", 1, 1],[3, 10, 6],[11, 3, -2]]}
 
     before(:each) do
-      Sassy::AnswerBuilder.new(answers_array).create_data_file!("test.dat")
+      Sassy::AnswerBuilder.new(answers_array).write_to_file("test.dat")
       @file = File.open("test.dat", "r")
     end
 

@@ -67,7 +67,7 @@ describe Sassy::SSSBuilder do
         [11, 3, -2]
       ]
 
-      Sassy.export! variables: questions, answers: answers
+      Sassy.write_to_file! variables: questions, answers: answers
       @doc = Nokogiri::XML(File.open("definition_file.xml"))
     end
 

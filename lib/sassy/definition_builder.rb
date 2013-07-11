@@ -1,14 +1,14 @@
 module Sassy
   class DefinitionBuilder
 
-    def initialize(variables, survey_name, record_id, answers)
-      @variables = variables
-      @survey_name = survey_name
-      @record_id = record_id
-      @answers = answers
+    def initialize(options)
+      @variables = options[:variables]
+      @answers = options[:answers]
+      @survey_name = options.fetch(:survey_name, "Survey")
+      @record_id = options.fetch(:record_id, "12345")
     end
 
-    def build_sss_template
+    def write_to_file
       xml_builder = Builder::XmlMarkup.new(indent: 2)
       xml_builder.instruct!(:xml, :version=> "1.0", :encoding => "UTF-8")
 
@@ -20,6 +20,21 @@ module Sassy
 
       xml_builder.target!
     end
+
+    def write(io)
+      xml_builder = Builder::XmlMarkup.new(target: io, indent: 2)
+      xml_builder.instruct!(:xml, :version=> "1.0", :encoding => "UTF-8")
+
+      xml_builder.sss(version: 1.2) do |x|
+        x.date(Date.today.strftime("%d %b, %Y"))
+        x.time(Time.now.strftime("%H:%M"))
+        build_survey(x)
+      end
+
+      xml_builder.target!
+    end
+
+    private
 
     def build_survey(xml_builder)
       xml_builder.survey do |s|

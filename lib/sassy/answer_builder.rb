@@ -6,10 +6,19 @@ module Sassy
       @answers = answers
     end
 
-    def create_data_file!(file_name = "data_file.dat")
+    def write_to_file(file_name)
       File.open(file_name, "w") do |file|
         padded_answers.transpose.each do |row|
           file.puts(row.inject(&:<<))
+        end
+      end
+    end
+
+    def write(io)
+      io.tap do |io|
+        padded_answers.transpose.each do |row|
+          io << row.inject(&:<<)
+          io << "\n"
         end
       end
     end
