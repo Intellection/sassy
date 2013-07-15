@@ -65,7 +65,7 @@ module Sassy
     end
 
     def answer_positions
-      Sassy::AnswerBuilder.answer_positions(@answers)
+      @answer_positions ||= Sassy::AnswerBuilder.answer_positions(@answers)
     end
   end
 end

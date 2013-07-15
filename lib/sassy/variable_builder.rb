@@ -19,6 +19,8 @@ module Sassy
           v.name(variable[:name])
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
+          # should include this range element seeing that there won't be any value elements
+          # v.range(from: from_value, to: to_value)
         end
 
         xml_builder
