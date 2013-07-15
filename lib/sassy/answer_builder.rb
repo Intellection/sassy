@@ -28,7 +28,7 @@ module Sassy
       positions = []
       position_counter = 1
       answers.each do |column|
-        max_length = column.max_by{ |e| e.to_s.strip.length }.to_s.length
+        max_length = column.map { |c| c.to_s.strip.length }.max
         new_position = position_counter + max_length
         end_position = max_length == 1 ? position_counter : position_counter + max_length - 1
         positions << { start: position_counter, length: max_length, finish: end_position }

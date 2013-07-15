@@ -19,7 +19,6 @@ module Sassy
           v.name(variable[:name])
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
-          v.range(from: variable[:values]["range"][:from], to: variable[:values]["range"][:to])
         end
 
         xml_builder
@@ -31,7 +30,7 @@ module Sassy
           v.name(variable[:name])
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
-          v.size(30)
+          v.size(position_start.to_i - position_end.to_i)
         end
 
         xml_builder
@@ -51,7 +50,7 @@ module Sassy
       end
 
       def calculate_position(answer_positions, variable_id)
-        # perhaps this should be based off name rather than id
+        # perhaps this should be based off name rather than variable id
         answer_positions[variable_id].values_at(:start, :finish)
       end
     end
