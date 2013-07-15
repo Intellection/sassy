@@ -23,8 +23,8 @@ module Sassy
       Sassy::AnswerBuilder.new(@options[:answers]).write(io)
     end
 
-    def write_zip(def_file_name='definition_file.xml', answer_file_name='data_file.dat', io=nil)
-      buffer = ZipRuby::Archive.open_buffer(ZipRuby::CREATE) do |ar|
+    def write_zip(io=nil, def_file_name='definition_file.xml', answer_file_name='data_file.dat')
+      buffer = ::ZipRuby::Archive.open_buffer(ZipRuby::CREATE) do |ar|
         def_io = StringIO.new
         dat_io = StringIO.new
         Sassy::DefinitionBuilder.new(@options).write(def_io)
@@ -34,7 +34,16 @@ module Sassy
         ar.add_io(def_file_name, def_io);
         ar.add_io(answer_file_name, dat_io);
       end
-      io ? io << buffer.gets : buffer
+
+      if io
+        # remember io position
+        pos = io.pos
+        io << buffer
+        io.pos = pos
+        return io
+      else
+        return buffer
+      end
     end
 
     private
