@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "builder", "~> 3.0.4"
-  spec.add_runtime_dependency "zipruby"
   spec.add_development_dependency "rspec", "~> 2.12"
   spec.add_development_dependency "guard", "~> 1.8.0"
   spec.add_development_dependency "guard-rspec"

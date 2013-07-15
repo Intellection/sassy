@@ -51,6 +51,7 @@ module Sassy
       end
 
       def calculate_position(answer_positions, variable_id)
+        # perhaps this should be based off name rather than id
         answer_positions[variable_id].values_at(:start, :finish)
       end
     end

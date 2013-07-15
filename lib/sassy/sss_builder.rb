@@ -24,7 +24,7 @@ module Sassy
     end
 
     def write_zip(def_file_name='definition_file.xml', answer_file_name='data_file.dat', io=nil)
-      buffer = Zip::Archive.open_buffer(Zip::CREATE) do |ar|
+      buffer = ZipRuby::Archive.open_buffer(ZipRuby::CREATE) do |ar|
         def_io = StringIO.new
         dat_io = StringIO.new
         Sassy::DefinitionBuilder.new(@options).write(def_io)
