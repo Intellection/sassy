@@ -196,6 +196,7 @@ describe Sassy::SSSBuilder do
 
         it "the content of the size element is legal" do
           # no + sign, no spaces, numeric digits must be present
+          puts @doc.xpath("/sss/survey/record/variable[@ident=0]//size")[0]
           @doc.xpath("/sss/survey/record/variable[@ident=0]//size")[0].inner_text.should == "30"
         end
       end
