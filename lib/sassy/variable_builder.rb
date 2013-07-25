@@ -32,7 +32,7 @@ module Sassy
           v.name(variable[:name])
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
-          v.size(position_start.to_i - position_end.to_i)
+          v.size(position_end.to_i - position_start.to_i)
         end
 
         xml_builder
