@@ -6,54 +6,54 @@ describe Sassy::SSSBuilder do
     before(:each) do
       questions = [{
           :id=>0,
-          :name=>"Respondent_ID", 
-          :type=>"character", 
-          :label=>"ID", 
+          :name=>"Respondent_ID",
+          :type=>"character",
+          :label=>"ID",
           :values=>
           {
             "generated"=>"Generated"
           }
-        },  
+        },
         {
           :id=>1,
-          :name=>"AGE_GROUP", 
-          :type=>"single", 
-          :label=>"Age group", 
+          :name=>"AGE_GROUP",
+          :type=>"single",
+          :label=>"Age group",
           :values=>
           {
-            "1"=>"18-29", 
-            "2"=>"30-44", 
+            "1"=>"18-29",
+            "2"=>"30-44",
             "3"=>"45+"
           }
-        }, 
+        },
         {
           :id=>2,
-          :name=>"Q24", 
-          :type=>"single", 
-          :label=>"Favourite tourist attraction", 
+          :name=>"Q24",
+          :type=>"single",
+          :label=>"Favourite tourist attraction",
           :values=>
           {
-            "1"=>"The Waterfront", 
-            "2"=>"Table Mountain", 
-            "3"=>"Cape Point", 
-            "4"=>"Whale spotting", 
-            "5"=>"The Garden Route", 
-            "6"=>"Township Tour", 
-            "7"=>"Shark cage diving", 
+            "1"=>"The Waterfront",
+            "2"=>"Table Mountain",
+            "3"=>"Cape Point",
+            "4"=>"Whale spotting",
+            "5"=>"The Garden Route",
+            "6"=>"Township Tour",
+            "7"=>"Shark cage diving",
             "8"=>"Wine tasting",
             "9"=>"Watch Bokke smash All Blacks",
             "10"=>"Robben Island"
           }
-        },  
+        },
         {
           :id=>3,
-          :name=>"Q32", 
-          :type=>"quantity", 
-          :label=>"Years as loyal customer", 
+          :name=>"Q32",
+          :type=>"quantity",
+          :label=>"Years as loyal customer",
           :values=>
           {
             "range"=>
-            { 
+            {
               from: -9,
               to: 99
             }
@@ -196,7 +196,7 @@ describe Sassy::SSSBuilder do
 
         it "the content of the size element is legal" do
           # no + sign, no spaces, numeric digits must be present
-          @doc.xpath("/sss/survey/record/variable[@ident=0]//size")[0].inner_text.scan(/^[-]?[0-9]*$/)[0].should == "30"
+          @doc.xpath("/sss/survey/record/variable[@ident=0]//size")[0].inner_text.should == "30"
         end
       end
     end

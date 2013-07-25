@@ -15,4 +15,5 @@ module Sassy
   def self.write_to_file!(options)
     Sassy::SSSBuilder.new(options).write_to_file!
   end
+
 end

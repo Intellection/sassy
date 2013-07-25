@@ -48,11 +48,11 @@ module Sassy
 
     private
 
-    def create_answers_file(file_name = "definition_file.xml")
+    def create_answers_file(file_name = "data_file.dat")
       Sassy::AnswerBuilder.new(@options[:answers]).write_to_file(file_name)
     end
 
-    def create_definition_file(file_name = "data_file.dat")
+    def create_definition_file(file_name = "definition_file.xml")
       xml = Sassy::DefinitionBuilder.new(@options).write_to_file
       File.open(file_name, "w") { |file| file.write(xml) }
     end
