@@ -5,14 +5,14 @@ module Sassy
       @variables = options[:variables]
       @answers = options[:answers]
       @survey_name = options.fetch(:survey_name, "Survey")
-      @record_id = options.fetch(:record_id, "12345")
+      @record_id = options.fetch(:record_id, "V")
     end
 
     def write_to_file
       xml_builder = Builder::XmlMarkup.new(indent: 2)
       xml_builder.instruct!(:xml, :version=> "1.0", :encoding => "UTF-8")
 
-      xml_builder.sss(version: 1.2) do |x|
+      xml_builder.sss(version: 1.1) do |x|
         x.date(Date.today.strftime("%d %b, %Y"))
         x.time(Time.now.strftime("%H:%M"))
         build_survey(x)
