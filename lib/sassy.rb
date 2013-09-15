@@ -7,6 +7,7 @@ require "sassy/version"
 require "sassy/sss_builder"
 require "sassy/variable_builder"
 require "sassy/answer_builder"
+require "sassy/answer_positions"
 require "sassy/definition_builder"
 
 # perhaps delete this module code here and just have requires, use SSSBuilder directly

@@ -24,27 +24,18 @@ module Sassy
     end
 
     def self.answer_positions(answers)
-      # REFACTOR
-      positions = []
-      position_counter = 1
-      answers.each do |column|
-        max_length = column.map { |c| c.to_s.strip.length }.max
-        new_position = position_counter + max_length
-        end_position = max_length == 1 ? position_counter : position_counter + max_length - 1
-        positions << { start: position_counter, length: max_length, finish: end_position }
-        position_counter = new_position
-      end
-      positions
+      Sassy::AnswerPositions.new(answers.map{|a| a[:qanswers]}).build
     end
 
     private
 
     def padded_answers
-      @answers.map do |column|
-        length = column.map { |c| c.to_s.strip.length }.max
-        column.map do |answer|
-          # if character, need to ljust
-          answer.to_s.rjust(length)
+      @answers.each_with_object([]) do |answer_hash, arr|
+        length = answer_hash[:qanswers].map { |c| c.to_s.strip.length }.max
+        if answer_hash[:type] == "character"
+          arr << answer_hash[:qanswers].map { |a| a.to_s.ljust(length)}
+        else
+          arr << answer_hash[:qanswers].map { |a| a.to_s.rjust(length)}
         end
       end
     end

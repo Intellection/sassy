@@ -5,7 +5,14 @@ describe Sassy::AnswerBuilder do
   context "given an array of arrays of answers" do
 
     # columns
-    let(:answers_array) {[["m09876543211", "27720628423", "27712345678"],["", 1, 1],[3, 10, 6],[11, 3, -2]]}
+    let(:answers_array) do 
+      [
+        { type: "character", qanswers: ["m09876543211", "27720628423", "27712345678"] },
+        { type: "single", qanswers: ["", 1, 1]} ,
+        { type: "single", qanswers: [3, 10, 6]} ,
+        { type: "quantity", qanswers: [11, 3, -2]}
+      ]
+    end
 
     before(:each) do
       Sassy::AnswerBuilder.new(answers_array).write_to_file("test.dat")
