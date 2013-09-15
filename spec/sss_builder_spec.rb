@@ -5,7 +5,7 @@ describe Sassy::SSSBuilder do
   context "Exporting an array of variables and answers" do
     before(:each) do
       questions = [{
-          :id=>0,
+          :id=>1,
           :name=>"Respondent_ID",
           :type=>"character",
           :label=>"ID",
@@ -15,7 +15,7 @@ describe Sassy::SSSBuilder do
           }
         },
         {
-          :id=>1,
+          :id=>2,
           :name=>"AGE_GROUP",
           :type=>"single",
           :label=>"Age group",
@@ -27,7 +27,7 @@ describe Sassy::SSSBuilder do
           }
         },
         {
-          :id=>2,
+          :id=>3,
           :name=>"Q24",
           :type=>"single",
           :label=>"Favourite tourist attraction",
@@ -46,7 +46,7 @@ describe Sassy::SSSBuilder do
           }
         },
         {
-          :id=>3,
+          :id=>4,
           :name=>"Q32",
           :type=>"quantity",
           :label=>"Years as loyal customer",
@@ -61,10 +61,10 @@ describe Sassy::SSSBuilder do
         }]
 
       answers = [
-        ["m09876543211", "27720628423", "27712345678"],
-        [2, 1, 1],
-        [3, 10, 6],
-        [11, 3, -2]
+        { type: "character", qanswers: ["m09876543211", "27720628423", "27712345678"] },
+        { type: "single", qanswers: [2, 1, 1] },
+        { type: "single", qanswers: [3, 10, 6] },
+        { type: "quantity", qanswers: [11, 3, -2]}
       ]
 
       Sassy.write_to_file! variables: questions, answers: answers
@@ -85,15 +85,15 @@ describe Sassy::SSSBuilder do
     end
 
     it "should contain a version attribute" do
-       @doc.xpath("//sss/@version")[0].value.should == "1.2"
+       @doc.xpath("//sss/@version")[0].value.should == "1.1"
     end
 
     it "should contain an opening survey element" do
       @doc.xpath("//survey").should_not be_empty
     end
 
-    it "should contain an opening record element" do
-      @doc.xpath("//record").should_not be_empty
+    it "should contain a valid opening record element" do
+      (@doc.xpath("//record")[0].attributes["ident"].value =~ /[a-zA-Z]/).nil?.should be_false
     end
 
     it "should contain an opening variable element" do
@@ -106,8 +106,8 @@ describe Sassy::SSSBuilder do
         @doc.xpath("//variable/@type")[0].value.should_not be_empty
       end
 
-      it "there should be an ident attribute" do
-        @doc.xpath("//variable/@ident")[1].value.should == "1"
+      it "there should be a valid ident attribute" do
+        @doc.xpath("//variable/@ident")[0].value.should == "1"
       end
 
       it "all ident attributes are unique" do
@@ -116,6 +116,8 @@ describe Sassy::SSSBuilder do
       end
 
       it "should contain a name element" do
+        pending "Need to make sure that the regex is correct"
+        valid_regex = "([a-zA-Z_])([a-zA-Z0-9_\.])*"
         @doc.xpath("//variable/name").length.should == 4
       end
 
@@ -129,7 +131,7 @@ describe Sassy::SSSBuilder do
 
       context "when the variable is type single" do
         it "should contain a values element" do
-          @doc.xpath("//variable[@ident=1]//values").should_not be_empty
+          @doc.xpath("//variable[@ident=2]//values").should_not be_empty
         end
 
         it "the start and finish attributes of the position element must be correct" do
@@ -137,13 +139,9 @@ describe Sassy::SSSBuilder do
           @doc.xpath("//variable")[1].at_xpath("position").attributes["finish"].value.should == "13"
         end
 
-        it "the number of decimal values in a value attribute must match the data in data file" do
-          pending "TODO"
-        end
-
         context "and the element is a values element" do
           it "should have a nested value element" do
-            @doc.xpath("//variable[@ident=1]//values/value").should_not be_empty
+            @doc.xpath("//variable[@ident=2]//values/value").should_not be_empty
           end
 
           it "the value element should have a code attribute" do
@@ -155,7 +153,7 @@ describe Sassy::SSSBuilder do
           end
 
           it "the value of the code attribute must be legal" do
-            code_ids = @doc.xpath("/sss/survey/record/variable[@ident=1]//value").map {|n| n["code"] }
+            code_ids = @doc.xpath("/sss/survey/record/variable[@ident=2]//value").map {|n| n["code"] }
             code_ids.uniq.length.should == 3
             code_ids.map{|e| e.scan(/^[-]?[0-9]*$/)}.flatten.length.should == 3
           end
@@ -164,42 +162,29 @@ describe Sassy::SSSBuilder do
 
       context "when the variable is type quantity" do
         it "should contain a range element" do
-          pending # need to add range
-          @doc.xpath("/sss/survey/record/variable[@ident=3]//range").should_not be_empty
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range").should_not be_empty
         end
 
         it "the range element should have a from and to attribute" do
-          pending # need to add range
-          @doc.xpath("/sss/survey/record/variable[@ident=3]//range/@from").should_not be_empty
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.should == "-2"
         end
 
         it "the values of the from and to attributes are legal" do
-          pending # need to add range
-          # no + sign, no spaces, numeric digits must be present
-          @doc.xpath("/sss/survey/record/variable[@ident=3]//range/@from")[0].value.scan(/^[-]?[0-9]*$/)[0].should == "-9"
-          @doc.xpath("/sss/survey/record/variable[@ident=3]//range/@to")[0].value.scan(/^[-]?[0-9]*$/)[0].should == "99"
-        end
-
-        it "the start and finish attributes of the position element must be correct" do
-          # values are correct
-          # finish must be >= start
-          # width of 'to' must match position_start - position_end
-          pending "TODO"
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.scan(/^[-]?[0-9]*$/)[0].should ==
+          "-2"
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@to")[0].value.scan(/^[-]?[0-9]*$/)[0].should ==
+          "11"
         end
       end
 
       context "when the variable is type character" do
         it "should contain a size element element" do
-          @doc.xpath("/sss/survey/record/variable[@ident=0]//size").should_not be_empty
-        end
-
-        it "the start and finish attributes of the position element must be correct" do
-          pending "TODO"
+          @doc.xpath("/sss/survey/record/variable[@ident=1]//size").should_not be_empty
         end
 
         it "the content of the size element is legal" do
           # no + sign, no spaces, numeric digits must be present
-          @doc.xpath("/sss/survey/record/variable[@ident=0]//size")[0].inner_text.should == "11"
+          @doc.xpath("/sss/survey/record/variable[@ident=1]//size")[0].inner_text.should == "11"
         end
       end
     end
