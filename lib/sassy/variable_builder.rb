@@ -23,7 +23,7 @@ module Sassy
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
           v.values do |q|
-            q.range(from: answers.min.round(1).to_s, to: answers.max.round(1).to_s)
+            q.range(from: answers.min.to_f.round(1), to: answers.max.to_f.round(1))
           end
         end
 
