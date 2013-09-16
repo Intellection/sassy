@@ -22,9 +22,7 @@ module Sassy
           v.name(variable[:name])
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
-          v.values do |q|
-            q.range(from: validate_range(answers.min), to: validate_range(answers.max))
-          end
+          build_quantity_values(v, variable, answers)
         end
 
         xml_builder
@@ -56,6 +54,17 @@ module Sassy
         xml_builder
       end
 
+      def build_quantity_values(xml_builder, variable, answers)
+        from, to = calculate_min_and_max(answers)
+        if from.nil? || to.nil?
+          xml_builder.value("No answer", code: 9999.99)
+        else
+          xml_builder.range(from: from.round(1), to: to.round(1))
+        end
+
+        xml_builder
+      end
+
       def calculate_position(answer_positions, variable_id, variable_type)
         # ugh, this nees to change to be name rather than position based
         if variable_type == :quantity
@@ -71,12 +80,9 @@ module Sassy
         # raising the exception if still doesn't pass
       end
 
-      def validate_range(number)
-        if number.is_a? Numeric
-          number.to_f.round(1)
-        else
-          number
-        end
+      def calculate_min_and_max(answers)
+        sanitized_answers = answers.map(&:to_s).reject(&:empty?).map(&:to_f)
+        [sanitized_answers.min, sanitized_answers.max]
       end
     end
   end

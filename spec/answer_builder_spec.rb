@@ -8,9 +8,9 @@ describe Sassy::AnswerBuilder do
     let(:answers_array) do 
       [
         { type: "character", qanswers: ["m09876543211", "27720628423", "27712345678"] },
-        { type: "single", qanswers: ["", 1, 1]} ,
-        { type: "single", qanswers: [3, 10, 6]} ,
-        { type: "quantity", qanswers: [11, 3, -2]}
+        { type: "single", qanswers: ["", "1", "1"]} ,
+        { type: "single", qanswers: [3, "10", "6"]} ,
+        { type: "quantity", qanswers: ["11.1", 3, "-2.123"]}
       ]
     end
 
@@ -49,13 +49,13 @@ describe Sassy::AnswerBuilder do
     context "the quantity variable answers" do
       it "should be right justified and padded" do
         @file.readline
-        @file.readline[15..16].should == " 3"
+        @file.readline[15..20].should == "     3"
       end
 
       it "should be correctly formatted when dealing with negative values" do
         @file.readline
         @file.readline
-        @file.readline[15..16].should == "-2"
+        @file.readline[15..20].should == "-2.123"
       end
     end
 

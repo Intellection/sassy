@@ -58,13 +58,28 @@ describe Sassy::SSSBuilder do
               to: 99
             }
           }
+        },
+        {
+          :id=>5,
+          :name=>"Q38",
+          :type=>"quantity",
+          :label=>"Time spent being foolish",
+          :values=>
+          {
+            "range"=>
+            {
+              from: -9,
+              to: 99
+            }
+          }
         }]
 
       answers = [
         { type: "character", qanswers: ["m09876543211", "27720628423", "27712345678"] },
         { type: "single", qanswers: [2, 1, 1] },
         { type: "single", qanswers: [3, 10, 6] },
-        { type: "quantity", qanswers: [11, 3, -2]}
+        { type: "quantity", qanswers: ["11.1", 3, -2]},
+        { type: "quantity", qanswers: ["", "", ""]}
       ]
 
       Sassy.write_to_file! variables: questions, answers: answers
@@ -112,21 +127,21 @@ describe Sassy::SSSBuilder do
 
       it "all ident attributes are unique" do
         idents = @doc.xpath("//variable/@ident").map { |i| i.value }
-        idents.uniq.length.should == 4
+        idents.uniq.length.should == 5
       end
 
       it "should contain a name element" do
         pending "Need to make sure that the regex is correct"
         valid_regex = "([a-zA-Z_])([a-zA-Z0-9_\.])*"
-        @doc.xpath("//variable/name").length.should == 4
+        @doc.xpath("//variable/name").length.should == 5
       end
 
       it "should contain a label element" do
-        @doc.xpath("//variable/label").length.should == 4
+        @doc.xpath("//variable/label").length.should == 5
       end
 
       it "should contain a position element" do
-        @doc.xpath("//variable/position").length.should == 4
+        @doc.xpath("//variable/position").length.should == 5
       end
 
       context "when the variable is type single" do
@@ -165,6 +180,10 @@ describe Sassy::SSSBuilder do
           @doc.xpath("/sss/survey/record/variable[@ident=4]//range").should_not be_empty
         end
 
+        it "should have a value element when there is no data" do
+          @doc.xpath("/sss/survey/record/variable[@ident=5]//value").should_not be_empty
+        end
+
         it "the range element should have a from and to attribute" do
           @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.should == "-2.0"
         end
@@ -173,7 +192,7 @@ describe Sassy::SSSBuilder do
           @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.scan(/^[-]?\d+\.?\d*$/)[0].should ==
           "-2.0"
           @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@to")[0].value.scan(/^[-]?\d+\.?\d*$/)[0].should ==
-          "11.0"
+          "11.1"
         end
       end
 
