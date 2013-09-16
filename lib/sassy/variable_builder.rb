@@ -23,7 +23,7 @@ module Sassy
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
           v.values do |q|
-            q.range(from: answers.min.to_f.round(1), to: answers.max.to_f.round(1))
+            q.range(from: validate_range(answers.min), to: validate_range(answers.max))
           end
         end
 
@@ -69,6 +69,14 @@ module Sassy
         raise ArgumentError, ":name param must be in format ([a-zA-Z_])([a-zA-Z0-9_\\.])*" unless name =~ /([a-zA-Z_])([a-zA-Z0-9_\\.])*/
         # could maybe do name.gsub("-","_") or some other kind of replacement, and fall back to
         # raising the exception if still doesn't pass
+      end
+
+      def validate_range(number)
+        if number.is_a? Numeric
+          number.to_f.round(1)
+        else
+          number
+        end
       end
     end
   end
