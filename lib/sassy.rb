@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require "builder"
 # need to actually use the fork, not this gem
 require "zipruby"
