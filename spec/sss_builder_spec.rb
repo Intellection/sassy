@@ -166,14 +166,14 @@ describe Sassy::SSSBuilder do
         end
 
         it "the range element should have a from and to attribute" do
-          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.should == "-2"
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.should == "-2.0"
         end
 
         it "the values of the from and to attributes are legal" do
-          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.scan(/^[-]?[0-9]*$/)[0].should ==
-          "-2"
-          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@to")[0].value.scan(/^[-]?[0-9]*$/)[0].should ==
-          "11"
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.scan(/^[-]?\d+\.?\d*$/)[0].should ==
+          "-2.0"
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@to")[0].value.scan(/^[-]?\d+\.?\d*$/)[0].should ==
+          "11.0"
         end
       end
 
