@@ -23,7 +23,7 @@ module Sassy
           v.label(variable[:label])
           v.position(start: position_start, finish: position_end)
           v.values do |q|
-            q.range(from: answers.min.round(1), to: answers.max.round(1))
+            q.range(from: answers.min.round_to_s(1), to: answers.max.round_to_s(1))
           end
         end
 
@@ -46,7 +46,7 @@ module Sassy
       private
 
       def build_single_values(xml_builder, variable)
-        xml_builder.values do |va| 
+        xml_builder.values do |va|
           variable[:values].each do |key, val|
             # may need to make sure that this starts at 1
             va.value(val, code: key)
@@ -60,7 +60,7 @@ module Sassy
         # ugh, this nees to change to be name rather than position based
         if variable_type == :quantity
           answer_positions[variable_id - 1].values_at(:start, :finish, :answers)
-        else 
+        else
           answer_positions[variable_id - 1].values_at(:start, :finish)
         end
       end
