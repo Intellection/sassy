@@ -55,13 +55,15 @@ module Sassy
       end
 
       def build_quantity_values(xml_builder, variable, answers)
-        from, to = calculate_min_and_max(answers)
-        if from.nil? || to.nil?
-          xml_builder.value("No answer", code: 9999.99)
-        else
-          xml_builder.range(from: from.round(1), to: to.round(1))
+        xml_builder.values do |va|
+          from, to = calculate_min_and_max(answers)
+          if from.nil? || to.nil?
+            va.value("No answer", code: 9999.99)
+          else
+            va.range(from: from.round(1), to: to.round(1))
+          end
         end
-
+ 
         xml_builder
       end
 
