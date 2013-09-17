@@ -83,7 +83,9 @@ module Sassy
       end
 
       def calculate_min_and_max(answers)
-        sanitized_answers = answers.map(&:to_s).reject(&:empty?).map(&:to_f)
+        sanitized_answers = answers.map(&:to_s).reject(&:empty?).map do |n| 
+          n.include?('.') ? n.to_f : n.to_i 
+        end
         [sanitized_answers.min, sanitized_answers.max]
       end
     end
