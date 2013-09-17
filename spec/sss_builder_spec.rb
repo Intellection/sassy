@@ -100,7 +100,7 @@ describe Sassy::SSSBuilder do
     end
 
     it "should contain a version attribute" do
-       @doc.xpath("//sss/@version")[0].value.should == "1.1"
+       @doc.xpath("//sss/@version")[0].value.should == "1.2"
     end
 
     it "should contain an opening survey element" do
