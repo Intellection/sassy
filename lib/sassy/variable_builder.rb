@@ -60,7 +60,7 @@ module Sassy
           if from.nil? || to.nil?
             va.value("No answer", code: 9999.99)
           else
-            va.range(from: from.round(1), to: to.round(1))
+            va.range(from: from, to: to)
           end
         end
  

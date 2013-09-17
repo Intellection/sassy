@@ -78,7 +78,7 @@ describe Sassy::SSSBuilder do
         { type: "character", qanswers: ["m09876543211", "27720628423", "27712345678"] },
         { type: "single", qanswers: [2, 1, 1] },
         { type: "single", qanswers: [3, 10, 6] },
-        { type: "quantity", qanswers: ["11.1", 3, -2]},
+        { type: "quantity", qanswers: ["11.1", 3, "2.123"]},
         { type: "quantity", qanswers: ["", "", ""]}
       ]
 
@@ -184,13 +184,23 @@ describe Sassy::SSSBuilder do
           @doc.xpath("/sss/survey/record/variable[@ident=5]//value").should_not be_empty
         end
 
+        it "the field width of the from and to fields should match the position_start and position_end width" do
+          finish_attr = @doc.xpath("/sss/survey/record/variable[@ident=4]//position").attr("finish").value.to_i
+          start_attr = @doc.xpath("/sss/survey/record/variable[@ident=4]//position").attr("start").value.to_i
+          to = @doc.xpath("/sss/survey/record/variable[@ident=4]//range").attr("to").value.length
+          from = @doc.xpath("/sss/survey/record/variable[@ident=4]//range").attr("from").value.length
+          max_width = [from, to].max
+
+          (finish_attr - start_attr + 1).should == max_width
+        end
+
         it "the range element should have a from and to attribute" do
-          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.should == "-2.0"
+          @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.should == "2.123"
         end
 
         it "the values of the from and to attributes are legal" do
           @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@from")[0].value.scan(/^[-]?\d+\.?\d*$/)[0].should ==
-          "-2.0"
+          "2.123"
           @doc.xpath("/sss/survey/record/variable[@ident=4]//range/@to")[0].value.scan(/^[-]?\d+\.?\d*$/)[0].should ==
           "11.1"
         end
