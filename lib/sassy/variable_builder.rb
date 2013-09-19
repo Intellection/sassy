@@ -98,8 +98,9 @@ module Sassy
         [from, to].tap do |values|
           values.each do |val|
             dec_points = capture_decimal_places(val)
-            padded_dec_points = dec_points.ljust(width, "0")
-            val << "." << padded_dec_points if dec_points.length < width
+            padded_dec_points = dec_points.ljust(width - dec_points.length, "0")
+            val << "." unless val.include?(".")
+            val << padded_dec_points if dec_points.length < width
           end
         end
       end

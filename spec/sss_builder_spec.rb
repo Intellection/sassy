@@ -78,7 +78,7 @@ describe Sassy::SSSBuilder do
         { type: "character", qanswers: ["m09876543211", "27720628423", "27712345678"] },
         { type: "single", qanswers: [2, 1, 1] },
         { type: "single", qanswers: [3, 10, 6] },
-        { type: "quantity", qanswers: ["14.285714285714285", 0, "2.123"]},
+        { type: "quantity", qanswers: ["14.285714285714285", 0.0, "2.123"]},
         { type: "quantity", qanswers: ["", "", ""]}
       ]
 
