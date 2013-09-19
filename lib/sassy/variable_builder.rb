@@ -57,7 +57,7 @@ module Sassy
       def build_quantity_values(xml_builder, variable, answers)
         xml_builder.values do |va|
           from, to = calculate_from_and_to(answers)
-          if from.empty? || to.empty?
+          if from.empty?
             va.value("No answer", code: 9999.99)
           else
             va.range(from: from, to: to)
@@ -83,22 +83,33 @@ module Sassy
       end
 
       def calculate_from_and_to(answers)
-        sanitized_answers = answers.map(&:to_s).reject(&:empty?).map do |n| 
-          n.include?('.') ? n.to_f : n.to_i 
+        numeric_answers = answers.map(&:to_s).reject(&:empty?).map do |n| 
+          n.include?('.') ? n.to_f : n.to_i
         end
-        from, to = sanitized_answers.min.to_s, sanitized_answers.max.to_s
+
+        from, to = numeric_answers.min.to_s, numeric_answers.max.to_s
         return "" if from.empty? || to.empty?
-        max_width = calculate_max_width(from, to)
-        [fix_width(from, max_width), fix_width(to, max_width)]
+
+        normalise_widths(from, to)
       end
 
-      def calculate_max_width(from, to)
-        [from.split('.').last.length, to.split('.').last.length].max
+      def normalise_widths(from, to)
+        width = max_width(from, to)
+        [from, to].tap do |values|
+          values.each do |val|
+            dec_points = capture_decimal_places(val)
+            padded_dec_points = dec_points.ljust(width, "0")
+            val << "." << padded_dec_points if dec_points.length < width
+          end
+        end
       end
 
-      def fix_width(val, max_width)
-        val = val << "." unless val.include? "."
-        val.ljust(max_width, "0")
+      def max_width(from, to)
+        [capture_decimal_places(from).length, capture_decimal_places(to).length].max
+      end
+
+      def capture_decimal_places(value)
+        value.include?(".") ? value.match(/(?:\.)(\d*)/).captures[0] : ""
       end
     end
   end
