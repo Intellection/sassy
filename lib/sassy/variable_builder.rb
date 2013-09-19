@@ -56,8 +56,8 @@ module Sassy
 
       def build_quantity_values(xml_builder, variable, answers)
         xml_builder.values do |va|
-          from, to = calculate_min_and_max(answers)
-          if from.nil? || to.nil?
+          from, to = calculate_from_and_to(answers)
+          if from.empty? || to.empty?
             va.value("No answer", code: 9999.99)
           else
             va.range(from: from, to: to)
@@ -77,16 +77,28 @@ module Sassy
       end
 
       def validate_name(name)
-        raise ArgumentError, ":name param must be in format ([a-zA-Z_])([a-zA-Z0-9_\\.])*" unless name =~ /([a-zA-Z_])([a-zA-Z0-9_\\.])*/
+        raise ArgumentError, ":name param must be in format ([a-zA-Z_])([a-zA-Z0-9_\\.])*" unless name =~ /([a-zA-Z_])([a-zA-Z0-9_\.])*/
         # could maybe do name.gsub("-","_") or some other kind of replacement, and fall back to
         # raising the exception if still doesn't pass
       end
 
-      def calculate_min_and_max(answers)
+      def calculate_from_and_to(answers)
         sanitized_answers = answers.map(&:to_s).reject(&:empty?).map do |n| 
           n.include?('.') ? n.to_f : n.to_i 
         end
-        [sanitized_answers.min, sanitized_answers.max]
+        from, to = sanitized_answers.min.to_s, sanitized_answers.max.to_s
+        return "" if from.empty? || to.empty?
+        max_width = calculate_max_width(from, to)
+        [fix_width(from, max_width), fix_width(to, max_width)]
+      end
+
+      def calculate_max_width(from, to)
+        [from.split('.').last.length, to.split('.').last.length].max
+      end
+
+      def fix_width(val, max_width)
+        val = val << "." unless val.include? "."
+        val.ljust(max_width, "0")
       end
     end
   end

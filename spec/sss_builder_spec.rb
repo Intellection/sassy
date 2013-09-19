@@ -87,8 +87,8 @@ describe Sassy::SSSBuilder do
     end
 
     after(:each) do
-      File.delete("definition_file.xml")
-      File.delete("data_file.dat")
+      File.delete("definition_file.xml") if File.exist?("definition_file.xml")
+      File.delete("data_file.dat") if File.exist?("data_file.dat")
     end
 
     it "should contain an opening sss element" do
@@ -192,6 +192,12 @@ describe Sassy::SSSBuilder do
           max_width = [from, to].max
 
           (finish_attr - start_attr + 1).should == max_width
+        end
+
+        it "the from and to fields should have the same width and decimal places" do
+          to = @doc.xpath("/sss/survey/record/variable[@ident=4]//range").attr("to").value.length
+          from = @doc.xpath("/sss/survey/record/variable[@ident=4]//range").attr("from").value.length
+          (to.to_s.split('.').last.length == from.to_s.split('.').last.length).should be_true
         end
 
         it "the range element should have a from and to attribute" do
