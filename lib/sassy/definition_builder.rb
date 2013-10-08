@@ -5,7 +5,7 @@ module Sassy
     def initialize(options)
       @variables = options[:variables]
       @answers = options[:answers]
-      @survey_name = options.fetch(:survey_name, "Survey")
+      @survey_name = options.fetch(:survey_name, "Survey").gsub(/\s|\\|\//, "")
       @record_id = options.fetch(:record_id, "V")
     end
 
