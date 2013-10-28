@@ -45,13 +45,18 @@ module Sassy
 
       def build_single_values(xml_builder, variable)
         xml_builder.values do |va|
+          raise ArgumentError, "Variable values need to start at 1 for valid Triple-S output" if invalid_values?(variable[:values].keys)
+
           variable[:values].each do |key, val|
-            # may need to make sure that this starts at 1
             va.value(val, code: key)
           end
         end
 
         xml_builder
+      end
+
+      def invalid_values?(values)
+        values.any? {|v| [0, "0"].include? v}
       end
 
       def build_quantity_values(xml_builder, variable, answers)
