@@ -108,7 +108,7 @@ describe Sassy::SSSBuilder do
     end
 
     it "should contain a valid opening record element" do
-      (@doc.xpath("//record")[0].attributes["ident"].value =~ /[a-zA-Z]/).nil?.should be_false
+      (@doc.xpath("//record")[0].attributes["ident"].value =~ /[a-zA-Z]/).nil?.should be false
     end
 
     it "should contain an opening variable element" do
@@ -128,12 +128,6 @@ describe Sassy::SSSBuilder do
       it "all ident attributes are unique" do
         idents = @doc.xpath("//variable/@ident").map { |i| i.value }
         idents.uniq.length.should == 5
-      end
-
-      it "should contain a name element" do
-        pending "Need to make sure that the regex is correct"
-        valid_regex = "([a-zA-Z_])([a-zA-Z0-9_\.])*"
-        @doc.xpath("//variable/name").length.should == 5
       end
 
       it "should contain a label element" do
@@ -197,7 +191,7 @@ describe Sassy::SSSBuilder do
         it "the from and to fields should have the same width and decimal places" do
           to = @doc.xpath("/sss/survey/record/variable[@ident=4]//range").attr("to").value.length
           from = @doc.xpath("/sss/survey/record/variable[@ident=4]//range").attr("from").value.length
-          (to.to_s.split('.').last.length == from.to_s.split('.').last.length).should be_true
+          (to.to_s.split('.').last.length == from.to_s.split('.').last.length).should be true
         end
 
         it "the range element should have a from and to attribute" do
